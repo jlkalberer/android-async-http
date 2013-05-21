@@ -57,6 +57,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.HttpEntityWrapper;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -266,8 +267,11 @@ public class AsyncHttpClient {
      *
      */
     public void setBasicAuth( String user, String pass, AuthScope scope){
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user,pass);
-        this.httpClient.getCredentialsProvider().setCredentials(scope, credentials);
+    	UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user, pass);
+	    Header header = BasicScheme.authenticate(credentials, "UTF-8", false);
+        this.addHeader(header.getName(), header.getValue());
+	    //UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user,pass);
+        //this.httpClient.getCredentialsProvider().setCredentials(scope, credentials);
     }
 
     /**
